@@ -1,0 +1,1 @@
+Para rodar o código use o comando mvn clean compile exec:java -Dexec.mainClass="com.ufrn.HeuVizinhoProximo"

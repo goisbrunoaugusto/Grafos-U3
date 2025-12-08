@@ -12,7 +12,7 @@ public class App {
     public static void main( String[] args ) {
         try {
             LeitorExcel leitor = new LeitorExcel();
-            Grafo grafo = leitor.popularGrafo("/planilha.xlsx", 0);
+            Grafo grafo = leitor.popularGrafo("/planilha.xlsx", 48, 0);
             System.out.println("Grafo carregado com " + grafo.getNumVertices() + " vértices.");
 
             System.out.println("\n--- 1. Vizinho Mais Próximo ---");

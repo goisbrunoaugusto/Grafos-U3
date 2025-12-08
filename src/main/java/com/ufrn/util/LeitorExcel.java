@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class LeitorExcel {
-    public Grafo popularGrafo(String caminho, int aba) throws IOException {
+    public Grafo popularGrafo(String caminho, int numVertices, int aba) throws IOException {
         InputStream is = getClass().getResourceAsStream(caminho);
 
         if (is == null) {
@@ -18,7 +18,7 @@ public class LeitorExcel {
 
         try (InputStream in = is; Workbook workbook = WorkbookFactory.create(in)) {
             Sheet sheet = workbook.getSheetAt(aba);
-            int numVertices = sheet.getLastRowNum();
+            // int numVertices = sheet.getLastRowNum();
             Grafo grafo = new Grafo(numVertices);
 
             for (int i = 1; i <= numVertices; i++) {

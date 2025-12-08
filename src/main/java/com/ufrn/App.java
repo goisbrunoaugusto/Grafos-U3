@@ -2,6 +2,7 @@ package com.ufrn;
 
 import com.ufrn.algorithm.BuscaLocal;
 import com.ufrn.algorithm.VizinhoMaisProximo;
+import com.ufrn.miscs.Miscs;
 import com.ufrn.model.Grafo;
 import com.ufrn.util.LeitorExcel;
 
@@ -18,14 +19,14 @@ public class App {
             VizinhoMaisProximo vizinho = new VizinhoMaisProximo();
             List<Integer> rotaInicial = vizinho.resolver(grafo, 0);
 
-            BuscaLocal bl = new BuscaLocal();
-            double distanciaInicial = bl.calcularCustoRota(grafo, rotaInicial);
+            double distanciaInicial = Miscs.calcularCustoRota(grafo, rotaInicial);
             System.out.println("Rota inicial: " + rotaInicial);
             System.out.printf("Distância inicial: %.2f km\n", distanciaInicial);
 
+            BuscaLocal bl = new BuscaLocal();
             System.out.println("\n--- 2. Busca Local ---");
             List<Integer> rotaOtimizada = bl.executarSwap(grafo, rotaInicial);
-            double distanciaFinal = bl.calcularCustoRota(grafo, rotaOtimizada);
+            double distanciaFinal = Miscs.calcularCustoRota(grafo, rotaOtimizada);
 
             System.out.println("Rota otimizada: " + rotaOtimizada);
             System.out.printf("Distância final: %.2f km\n", distanciaFinal);

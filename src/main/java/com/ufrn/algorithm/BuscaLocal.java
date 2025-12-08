@@ -1,5 +1,6 @@
 package com.ufrn.algorithm;
 
+import com.ufrn.miscs.Miscs;
 import com.ufrn.model.Grafo;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ public class BuscaLocal {
         List<Integer> rota = new ArrayList<>(rotaInicial);
 
         boolean houveMelhoria = true;
-        double ditanciaAtual = calcularCustoRota(grafo, rota);
+        double ditanciaAtual = Miscs.calcularCustoRota(grafo, rota);
 
         while (houveMelhoria) {
             houveMelhoria = false;
@@ -21,7 +22,7 @@ public class BuscaLocal {
 
                     Collections.swap(rota, i, j);
 
-                    double novoCusto = calcularCustoRota(grafo, rota);
+                    double novoCusto = Miscs.calcularCustoRota(grafo, rota);
 
                     if (novoCusto < ditanciaAtual) {
                         ditanciaAtual = novoCusto;
@@ -34,18 +35,5 @@ public class BuscaLocal {
         }
 
         return rota;
-    }
-
-    public double calcularCustoRota(Grafo grafo, List<Integer> rota) {
-        double custo = 0.0;
-        for (int i = 0; i < rota.size() - 1; i++) {
-            int origem = rota.get(i);
-            int destino = rota.get(i + 1);
-            custo += grafo.getPeso(origem, destino);
-        }
-
-        custo += grafo.getPeso(rota.get(rota.size() - 1), rota.get(0));
-
-        return custo;
     }
 }

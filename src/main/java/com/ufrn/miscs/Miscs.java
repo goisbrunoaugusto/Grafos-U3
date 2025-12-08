@@ -2,6 +2,7 @@ package com.ufrn.miscs;
 
 import com.ufrn.model.Grafo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Miscs {
@@ -17,5 +18,9 @@ public class Miscs {
         custo += grafo.getPeso(rota.get(rota.size() - 1), rota.get(0));
 
         return custo;
+    }
+
+    public static List<Integer> clonarLista(List<Integer> original) {
+        return new ArrayList<>(original);
     }
 }

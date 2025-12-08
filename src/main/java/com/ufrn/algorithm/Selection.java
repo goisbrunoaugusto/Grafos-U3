@@ -14,6 +14,6 @@ public class Selection {
         int parentSize = (int) Math.floor(population.size()*percent);
         if(parentSize <= 0) return null;
 
-        return population.subList(0, parentSize-1);
+        return population.subList(0, parentSize);
     }
 }

@@ -23,14 +23,14 @@ public class IMPApp {
             System.out.println("Rota inicial: " + rotaInicial);
             System.out.printf("Distância inicial: %.2f km\n", distanciaInicial);
 
-            // BuscaLocal bl = new BuscaLocal();
-            // System.out.println("\n--- 2. Busca Local ---");
-            // List<Integer> rotaOtimizada = bl.executarSwap(grafo, rotaInicial);
-            // double distanciaFinal = Miscs.calcularCustoRota(grafo, rotaOtimizada);
+            BuscaLocal bl = new BuscaLocal();
+            System.out.println("\n--- 2. Busca Local ---");
+            List<Integer> rotaOtimizada = bl.executarShift(grafo, rotaInicial);
+            double distanciaFinal = Miscs.calcularCustoRota(grafo, rotaOtimizada);
 
-            // System.out.println("Rota otimizada: " + rotaOtimizada);
-            // System.out.printf("Distância final: %.2f km\n", distanciaFinal);
-            // System.out.printf("Melhoria: %.2f%%\n", ((distanciaInicial - distanciaFinal) / distanciaInicial) * 100);
+            System.out.println("Rota otimizada: " + rotaOtimizada);
+            System.out.printf("Distância final: %.2f km\n", distanciaFinal);
+            System.out.printf("Melhoria: %.2f%%\n", ((distanciaInicial - distanciaFinal) / distanciaInicial) * 100);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -26,7 +26,25 @@ public class Crossover {
             }
 
             for (int j = 0; j < parentBChromosomes.size(); j++) {
-                if(parentAChromosomes.contains(parentBChromosomes.get(j))) parentBChromosomes.set(j, notOnListQueue.remove());
+                if(parentAChromosomes.contains(parentBChromosomes.get(j))) {
+                    boolean added = false;
+                    do{
+                        if (notOnListQueue.isEmpty()) {
+                            break;
+                        }
+
+                        if(parentBChromosomes.contains(notOnListQueue.element())) {
+                            notOnListQueue.remove();
+                        }else{
+                            parentBChromosomes.set(j, notOnListQueue.remove());
+                            added = true;
+                        }
+                    }while(!added);
+                }
+
+                if (notOnListQueue.isEmpty()) {
+                    break;
+                }
             }
 
             offspringChromosomes.addAll(parentBChromosomes);

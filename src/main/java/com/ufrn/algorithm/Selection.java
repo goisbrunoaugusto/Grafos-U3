@@ -42,6 +42,7 @@ public class Selection {
     * */
     static public List<Pair<List<Integer>, Double>> elitismSelection(List<Pair<List<Integer>, Double>> population, double percent){
         int parentSize = (int) Math.floor(population.size()*percent);
+        if (parentSize % 2 != 0) parentSize++;
         if(parentSize <= 0) return null;
 
         return population.subList(0, parentSize);

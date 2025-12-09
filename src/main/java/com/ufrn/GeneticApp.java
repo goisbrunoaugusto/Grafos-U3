@@ -1,9 +1,6 @@
 package com.ufrn;
 
-import com.ufrn.algorithm.Crossover;
-import com.ufrn.algorithm.Fitness;
-import com.ufrn.algorithm.Mutation;
-import com.ufrn.algorithm.Selection;
+import com.ufrn.algorithm.*;
 import com.ufrn.miscs.Pair;
 import com.ufrn.model.Grafo;
 import com.ufrn.util.LeitorExcel;
@@ -56,6 +53,16 @@ public class GeneticApp {
                 System.out.print("Rota: " + offspring.key());
                 System.out.printf(" | Custo: %.2f km\n", offspring.value());
             }
+
+            System.out.println();
+            System.out.println("------------------ Filhos que sobraram da renovação ------------------ ");
+            List<Pair<List<Integer>, Double>> vencedoresTorneio = Renovacao.renovarPorTorneio(populationList, offspringList, 3);
+
+            for(Pair<List<Integer>, Double> vencedores : vencedoresTorneio){
+                System.out.print("Rota: " + vencedores.key());
+                System.out.printf(" | Custo: %.2f km\n", vencedores.value());
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();

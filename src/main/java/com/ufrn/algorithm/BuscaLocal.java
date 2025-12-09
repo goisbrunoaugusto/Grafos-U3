@@ -89,6 +89,11 @@ public class BuscaLocal {
         return rota;
     }
 
+    /**
+     * @param grafo: O grafo contendo as distâncias e pesos das arestas entre as cidades
+     * @param rotaInicial: A lista com a sequência da rota inicial a ser otimizada
+     * @return Retorna a lista da rota refinada após a busca local
+     */
     public List<Integer> executarInversao(Grafo grafo, List<Integer> rotaInicial) {
         List<Integer> rota = new ArrayList<>(rotaInicial);
         boolean houveMelhoria = true;
@@ -118,6 +123,11 @@ public class BuscaLocal {
         return rota;
     }
 
+    /**
+     * @param rota: A lista de inteiros representando a rota que será modificada
+     * @param inicio: O índice inicial do subtrecho a ser invertido
+     * @param fim: O índice final do subtrecho a ser invertido
+     */
     private void inverterTrecho(List<Integer> rota, int inicio, int fim) {
         while (inicio < fim) {
             Collections.swap(rota, inicio, fim);

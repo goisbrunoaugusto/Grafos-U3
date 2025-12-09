@@ -7,32 +7,38 @@ import java.util.List;
 import java.util.Random;
 
 public class Selection {
-    static public List<Pair<List<Integer>, Double>> tournamentSelection(List<Pair<List<Integer>, Double>> population, int numParents, int k) {
+    /**
+     * @param populacao: Lista de pares contendo as rotas e seus respectivos custos
+     * @param numPais: Quantidade de indivíduos que serão selecionados para compor a lista de pais
+     * @param tamanhoTorneio: Número de indivíduos sorteados aleatoriamente para competir a cada rodada
+     * @return Retorna uma lista de pais selecionados com base nas vitórias nos torneios (menor custo vence)
+     */
+    static public List<Pair<List<Integer>, Double>> selecaoPorTorneio(List<Pair<List<Integer>, Double>> populacao, int numPais, int tamanhoTorneio) {
         Random random = new Random();
-        List<Pair<List<Integer>, Double>> parents = new ArrayList<>();
+        List<Pair<List<Integer>, Double>> pais = new ArrayList<>();
 
         // Loop para selecionar a quantidade desejada de pais
-        for (int i = 0; i < numParents; i++) {
-            // Inicia o torneio com aleatório
-            int randomIndex = random.nextInt(population.size());
-            Pair<List<Integer>, Double> winner = population.get(randomIndex);
+        for (int i = 0; i < numPais; i++) {
+            // Inicia o torneio sorteando o primeiro competidor
+            int indiceSorteado = random.nextInt(populacao.size());
+            Pair<List<Integer>, Double> vencedorRodada = populacao.get(indiceSorteado);
 
-            // Realiza as batalhas
-            for (int j = 0; j < k - 1; j++) {
-                int challengerIndex = random.nextInt(population.size());
-                Pair<List<Integer>, Double> challenger = population.get(challengerIndex);
+            // Realiza as batalhas contra os demais competidores
+            for (int j = 0; j < tamanhoTorneio - 1; j++) {
+                int novoIndiceSorteado = random.nextInt(populacao.size());
+                Pair<List<Integer>, Double> candidato = populacao.get(novoIndiceSorteado);
 
                 // Menor custo vence
-                if (challenger.value() < winner.value()) {
-                    winner = challenger;
+                if (candidato.value() < vencedorRodada.value()) {
+                    vencedorRodada = candidato;
                 }
             }
 
-            // Adiciona vencedor à lista de pais
-            parents.add(winner);
+            // Adiciona o vencedor desta rodada à lista de pais
+            pais.add(vencedorRodada);
         }
 
-        return parents;
+        return pais;
     }
 
     /**

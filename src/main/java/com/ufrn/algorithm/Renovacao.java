@@ -8,6 +8,12 @@ import java.util.List;
 import java.util.Random;
 
 public class Renovacao {
+    /**
+     * @param populacaoAntiga: A lista de pares representando a população da geração atual (pais) e seus custos
+     * @param novosFilhos: A lista de pares representando os novos indivíduos gerados (filhos) e seus custos
+     * @param tamanhoTorneio: O número de indivíduos sorteados aleatoriamente do pool (pais + filhos) para competir por uma vaga na nova geração
+     * @return Retorna a nova população preenchida pelos vencedores dos torneios realizados entre o conjunto unificado de pais e filhos
+     */
     static public List<Pair<List<Integer>, Double>> renovarPorTorneio(List<Pair<List<Integer>, Double>> populacaoAntiga, List<Pair<List<Integer>, Double>> novosFilhos, int tamanhoTorneio) {
         List<Pair<List<Integer>, Double>> novaPopulacao = new ArrayList<>();
 
@@ -57,6 +63,11 @@ public class Renovacao {
         return novaPopulacao;
     }
 
+    /**
+     * @param populacaoAntiga: A lista de pares representando a população da geração atual (pais) e seus custos
+     * @param novosFilhos: A lista de pares representando os novos indivíduos gerados (filhos) e seus custos
+     * @return Retorna a nova população composta pelos melhores indivíduos (menor custo) selecionados do conjunto total (pais + filhos)
+     */
     public List<Pair<List<Integer>, Double>> renovarPorElitismo(List<Pair<List<Integer>, Double>> populacaoAntiga, List<Pair<List<Integer>, Double>> novosFilhos) {
         int tamanhoDesejado = populacaoAntiga.size();
 

@@ -7,6 +7,11 @@ import com.ufrn.model.Grafo;
 import com.ufrn.util.LeitorExcel;
 import org.apache.commons.math3.exception.NullArgumentException;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Comparator;
 import java.util.List;
 
@@ -19,6 +24,8 @@ public class GeneticApp {
         System.out.println("=== Algoritmo Genético ===");
 
         try {
+            Files.write(Paths.get("src/main/java/com/ufrn/results/GeneticResults.txt"), "".getBytes());
+
             String planilha = "/planilha.xlsx";
             String planilhaProblema9e10 = "/planilhaProblema9e10.xlsx";
 
@@ -88,11 +95,19 @@ public class GeneticApp {
     }
 
     private static void printResultados(String problema, String unidade) {
-        System.out.println("\n------------------------------------------------------------");
-        System.out.println(problema);
-        System.out.printf("Menor valor: %.2f %s\n", menorValor.value(), unidade);
-        System.out.printf("Média: %.2f %s\n", mediaValores, unidade);
-        System.out.printf("Tempo de execução: %d ms\n", tempoExecucao);
+        try{
+            String text = "------------------------------------------------------------\n" +
+                    problema + "\n" +
+                    "Menor valor: " + String.format("%.2f", menorValor.value()) + unidade + "\n" +
+                    "Média: " + String.format("%.2f", mediaValores) + unidade + "\n" +
+                    "Tempo de execução: " + tempoExecucao + "ms\n";
+            System.out.println(text);
+
+            Files.write(Paths.get("src/main/java/com/ufrn/results/GeneticResults.txt"), text.getBytes(), StandardOpenOption.APPEND);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
     }
 
     public static void rodarProblema(int id, String planilha, int numVertice, int aba) {

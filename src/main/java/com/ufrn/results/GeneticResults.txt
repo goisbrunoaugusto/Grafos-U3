@@ -1,0 +1,60 @@
+------------------------------------------------------------
+Problema 1
+Menor valor: 2114,00km
+Média: 2230,43km
+Tempo de execução: 29ms
+------------------------------------------------------------
+Problema 2
+Menor valor: 2162,00min
+Média: 2351,00min
+Tempo de execução: 23ms
+------------------------------------------------------------
+Problema 3
+Menor valor: 1725,70km
+Média: 1939,83km
+Tempo de execução: 15ms
+------------------------------------------------------------
+Problema 4
+Menor valor: 1717,00min
+Média: 1891,39min
+Tempo de execução: 14ms
+------------------------------------------------------------
+Problema 5
+Menor valor: 1337,30km
+Média: 1459,92km
+Tempo de execução: 12ms
+------------------------------------------------------------
+Problema 6
+Menor valor: 1242,00min
+Média: 1316,71min
+Tempo de execução: 12ms
+------------------------------------------------------------
+Problema 7
+Menor valor: 672,70km
+Média: 726,75km
+Tempo de execução: 11ms
+------------------------------------------------------------
+Problema 8
+Menor valor: 609,00min
+Média: 627,17min
+Tempo de execução: 11ms
+------------------------------------------------------------
+Problema 9
+Menor valor: 438,30km
+Média: 445,29km
+Tempo de execução: 10ms
+------------------------------------------------------------
+Problema 10
+Menor valor: 364,00min
+Média: 368,29min
+Tempo de execução: 9ms
+------------------------------------------------------------
+Problema 11
+Menor valor: 344,90km
+Média: 346,60km
+Tempo de execução: 9ms
+------------------------------------------------------------
+Problema 12
+Menor valor: 305,00min
+Média: 306,17min
+Tempo de execução: 11ms

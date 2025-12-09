@@ -1,6 +1,7 @@
 package com.ufrn;
 
 import com.ufrn.algorithm.*;
+import com.ufrn.algorithm.Selection;
 import com.ufrn.miscs.Miscs;
 import com.ufrn.miscs.Pair;
 import com.ufrn.model.Grafo;
@@ -115,6 +116,7 @@ public class GeneticApp {
             menorValor = null;
             mediaValores = 0;
             tempoExecucao = 0;
+            String unidade = (aba == 0) ? "km" : "min";
 
 //            System.out.println("\n------------------------------------------------------------");
 //            System.out.println("Problema " + id);
@@ -124,6 +126,8 @@ public class GeneticApp {
             Grafo grafo = leitor.popularGrafo(planilha, numVertice, aba);
 
             List<Pair<List<Integer>, Double>> populationList = Fitness.setPopulationWithClosestNeighbourAndSwap(grafo.getNumVertices(), grafo);
+
+            populationList.addAll(Fitness.setPopulationWithClosestInsertionAndShift(grafo.getNumVertices(), grafo));
             populationList.sort(Comparator.comparingDouble(Pair<List<Integer>, Double>::value).reversed());
 
 //            for(Pair<List<Integer>, Double> route : populationList){

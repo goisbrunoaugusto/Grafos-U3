@@ -24,7 +24,6 @@ public class Fitness {
 
     static public List<Pair<List<Integer>, Double>> setPopulationWithClosestNeighbour(int populationSize, Grafo grafo){
         List<Pair<List<Integer>, Double>> population = new ArrayList<>();
-        HashMap<Integer, Integer> initialVertexList = generateInitialVertexList(populationSize, grafo.getNumVertices());
 
         for (int i = 0; i < populationSize; i++) {
             VizinhoMaisProximo closestNeighbour = new VizinhoMaisProximo();
@@ -36,14 +35,54 @@ public class Fitness {
         return population;
     }
 
+    /***
+     *
+     * @param populationSize Tamanho desejado da população
+     * @param grafo Grafo das rotas
+     * @return Uma lista de todas as rotas geradas pelo algoritmo de visinho mais próximo com o custo total delas
+     */
     static public List<Pair<List<Integer>, Double>> setPopulationWithClosestNeighbourAndSwap(int populationSize, Grafo grafo){
         List<Pair<List<Integer>, Double>> population = new ArrayList<>();
 
         for (int i = 0; i < populationSize; i++) {
             VizinhoMaisProximo closestNeighbour = new VizinhoMaisProximo();
             BuscaLocal bl = new BuscaLocal();
+
+            // Executa o algoritmo de vizinho mais próximo a partir do caminho especificado e aplica a busca local swap na rota gerada
             List<Integer> route = bl.executarSwap(grafo, closestNeighbour.resolver(grafo, i));
+
+            // Cálcula o valor da rota
             double cost = Miscs.calcularCustoRota(grafo, route);
+
+            // Adiciona a rota à população
+            population.add(new Pair<>(route, cost));
+        }
+
+        return population;
+    }
+
+    /***
+     *
+     * @param populationSize Tamanho desejado da população
+     * @param grafo Grafo das rotas
+     * @return Uma lista de todas as rotas geradas pelo algoritmo de visinho mais próximo com o custo total delas
+     */
+    static public List<Pair<List<Integer>, Double>> setPopulationWithClosestInsertionAndShift(int populationSize, Grafo grafo){
+        List<Pair<List<Integer>, Double>> population = new ArrayList<>();
+
+        for (int i = 0; i < populationSize; i++) {
+            InsercaoMaisProxima closestInsertion = new InsercaoMaisProxima();
+            BuscaLocal bl = new BuscaLocal();
+
+            // Executa o algoritmo de inserção mais próxima a partir do caminho especificado e aplica a busca local shift na rota gerada
+            List<Integer> CIRoute = closestInsertion.resolver(grafo, i);
+            CIRoute.removeLast();
+            List<Integer> route = bl.executarShift(grafo, CIRoute);
+
+            // Cálcula o valor da rota
+            double cost = Miscs.calcularCustoRota(grafo, route);
+
+            // Adiciona a rota à população
             population.add(new Pair<>(route, cost));
         }
 

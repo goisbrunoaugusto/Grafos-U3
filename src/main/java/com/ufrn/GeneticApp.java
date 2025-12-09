@@ -132,11 +132,13 @@ public class GeneticApp {
             LeitorExcel leitor = new LeitorExcel();
             Grafo grafo = leitor.popularGrafo(planilha, numVertice, aba);
 
-//            System.out.println("Começou");
             long startTime = System.nanoTime();
 
+            // Geração da população utilizando vizinho mais próximo com swap e inserção mais próxima com shift
             List<Pair<List<Integer>, Double>> populationList = Fitness.setPopulationWithClosestNeighbourAndSwap(grafo.getNumVertices(), grafo);
             populationList.addAll(Fitness.setPopulationWithClosestInsertionAndShift(grafo.getNumVertices(), grafo));
+
+            // Ordenação da população em ordem crescente de custo total da rota
             populationList.sort(Comparator.comparingDouble(Pair<List<Integer>, Double>::value).reversed());
 
 //            for(Pair<List<Integer>, Double> route : populationList){
@@ -146,6 +148,8 @@ public class GeneticApp {
 
 //            System.out.println();
 //            System.out.println("------------------ Pais selecionados ------------------ ");
+
+            // Seleção da população por elitismo (os 80% com menor custo total de rota)
             List<Pair<List<Integer>, Double>> parentList = Selection.elitismSelection(populationList,.8);
             if(parentList == null){
                 throw new NullArgumentException();
@@ -158,6 +162,8 @@ public class GeneticApp {
 
 //            System.out.println();
 //            System.out.println("------------------ Filhos gerados ------------------ ");
+
+            // Cruzamento da população selecionada por algoritmo de um ponto
             List<Pair<List<Integer>, Double>> offspringList = Crossover.onePoint(grafo, parentList);
 
 //            for(Pair<List<Integer>, Double> offspring : offspringList){
@@ -167,6 +173,8 @@ public class GeneticApp {
 
 //            System.out.println();
 //            System.out.println("------------------ Filhos gerados normais e mutantes ------------------ ");
+
+            // Mutação dos filhos gerados em cinquenta por cento
             List<Pair<List<Integer>, Double>> mutatedOffspringList = Mutation.mutate(grafo, offspringList, .5);
 
 //            for(Pair<List<Integer>, Double> offspring : mutatedOffspringList){
@@ -176,8 +184,11 @@ public class GeneticApp {
 
 //            System.out.println();
 //            System.out.println("------------------ Filhos que sobraram da renovação ------------------ ");
+
+            // Renovação da população por torneio
             List<Pair<List<Integer>, Double>> vencedoresTorneio = Renovacao.renovarPorTorneio(populationList, mutatedOffspringList, 3);
 
+            // Definição do menor valor dentre os vencedores do torneio
             double _somaValores = 0;
             for(Pair<List<Integer>, Double> vencedor: vencedoresTorneio){
                 _somaValores += vencedor.value();
@@ -187,7 +198,6 @@ public class GeneticApp {
                     _menorValor = vencedor;
                 }
             }
-            _mediaValores = _somaValores/vencedoresTorneio.size();
 
 //            for(Pair<List<Integer>, Double> vencedores : vencedoresTorneio){
 //                System.out.print("Rota: " + vencedores.key());
@@ -198,6 +208,7 @@ public class GeneticApp {
 //            System.out.println("Terminou");
             _tempoExecucao = (double) (stopTime - startTime) / 1_000_000;
 
+            _mediaValores = _somaValores/vencedoresTorneio.size();
             somaMediaValores += _mediaValores;
             somaTempoExecucao += _tempoExecucao;
 //            menorValor = _menorValor;

@@ -127,19 +127,26 @@ public class MemeticoApp {
             LeitorExcel leitor = new LeitorExcel();
             Grafo grafo = leitor.popularGrafo(planilha, numVertice, aba);
 
+            // Geração da população utilizando vizinho mais próximo com swap e inserção mais próxima com shift
             List<Pair<List<Integer>, Double>> populationList = Fitness.setPopulationWithClosestNeighbourAndSwap(grafo.getNumVertices(), grafo);
             populationList.addAll(Fitness.setPopulationWithClosestInsertionAndShift(grafo.getNumVertices(), grafo));
+
+            // Ordenação da população em ordem crescente de custo total da rota
             populationList.sort(Comparator.comparingDouble(Pair<List<Integer>, Double>::value).reversed());
 
+            // Seleção da população por elitismo (os 80% com menor custo total de rota)
             List<Pair<List<Integer>, Double>> parentList = Selection.elitismSelection(populationList, .8);
             if(parentList == null){
                 throw new NullArgumentException();
             }
 
+            // Cruzamento da população selecionada por algoritmo de um ponto
             List<Pair<List<Integer>, Double>> offspringList = Crossover.onePoint(grafo, parentList);
 
+            // Mutação dos filhos gerados em cinquenta por cento
             List<Pair<List<Integer>, Double>> mutatedOffspringList = Mutation.mutate(grafo, offspringList, .5);
 
+            // Aplicação das buscas locais swap, shift e inversão
             BuscaLocal bl = new BuscaLocal();
             List<Pair<List<Integer>, Double>> memeticOffspringList = new ArrayList<>();
 
@@ -156,8 +163,10 @@ public class MemeticoApp {
                 memeticOffspringList.add(new Pair<>(rotaAtual, custoOtimizado));
             }
 
+            // Renovação da população por torneio
             List<Pair<List<Integer>, Double>> vencedoresTorneio = Renovacao.renovarPorTorneio(populationList, memeticOffspringList, 3);
 
+            // Definição do menor valor dentre os vencedores do torneio
             double _somaValores = 0;
             for(Pair<List<Integer>, Double> vencedor: vencedoresTorneio){
                 _somaValores += vencedor.value();

@@ -8,6 +8,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Mutation {
+    /**
+     *
+     * @param grafo Grafo das rotas
+     * @param originalOffspringList Lista dos filhos original
+     * @param percent Porcentagem de filhos que serão mutacionados
+     * @return Retorna uma lista contendo filhos que não foram mutacionados junto com filhos que foram
+     */
     static public List<Pair<List<Integer>, Double>> mutate(Grafo grafo, List<Pair<List<Integer>, Double>> originalOffspringList, double percent){
         Random random = new Random();
         int mutatedOffspringSize = (int) Math.floor(originalOffspringList.size()*percent);

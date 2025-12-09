@@ -1,60 +1,60 @@
 ------------------------------------------------------------
 Problema 1
-Menor valor: 1970,00km
-Média: 2133,54km
-Tempo de execução: 141ms
+Menor valor: 1942,30km
+Média: 2097,11km
+Tempo de execução: 593,01ms
 ------------------------------------------------------------
 Problema 2
-Menor valor: 2009,00min
-Média: 2211,08min
-Tempo de execução: 122ms
+Menor valor: 1942,30min
+Média: 2078,88min
+Tempo de execução: 672,36ms
 ------------------------------------------------------------
 Problema 3
-Menor valor: 1708,00km
-Média: 1822,47km
-Tempo de execução: 37ms
+Menor valor: 1695,00km
+Média: 1776,13km
+Tempo de execução: 214,27ms
 ------------------------------------------------------------
 Problema 4
 Menor valor: 1662,00min
-Média: 1805,47min
-Tempo de execução: 38ms
+Média: 1740,99min
+Tempo de execução: 199,47ms
 ------------------------------------------------------------
 Problema 5
-Menor valor: 1329,30km
-Média: 1386,84km
-Tempo de execução: 15ms
+Menor valor: 1321,00km
+Média: 1396,95km
+Tempo de execução: 43,70ms
 ------------------------------------------------------------
 Problema 6
-Menor valor: 1227,00min
-Média: 1281,67min
-Tempo de execução: 16ms
+Menor valor: 1223,00min
+Média: 1285,48min
+Tempo de execução: 39,84ms
 ------------------------------------------------------------
 Problema 7
 Menor valor: 672,70km
-Média: 692,27km
-Tempo de execução: 10ms
+Média: 691,61km
+Tempo de execução: 14,59ms
 ------------------------------------------------------------
 Problema 8
-Menor valor: 608,00min
-Média: 619,67min
-Tempo de execução: 10ms
+Menor valor: 606,00min
+Média: 612,18min
+Tempo de execução: 10,59ms
 ------------------------------------------------------------
 Problema 9
 Menor valor: 438,30km
-Média: 440,59km
-Tempo de execução: 8ms
+Média: 438,33km
+Tempo de execução: 15,07ms
 ------------------------------------------------------------
 Problema 10
 Menor valor: 364,00min
-Média: 366,71min
-Tempo de execução: 9ms
+Média: 364,15min
+Tempo de execução: 9,59ms
 ------------------------------------------------------------
 Problema 11
 Menor valor: 344,90km
-Média: 345,47km
-Tempo de execução: 10ms
+Média: 346,50km
+Tempo de execução: 10,33ms
 ------------------------------------------------------------
 Problema 12
 Menor valor: 305,00min
-Média: 306,00min
-Tempo de execução: 9ms
+Média: 305,01min
+Tempo de execução: 9,14ms

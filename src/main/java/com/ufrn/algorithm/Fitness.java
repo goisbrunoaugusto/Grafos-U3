@@ -39,7 +39,7 @@ public class Fitness {
      *
      * @param populationSize Tamanho desejado da população
      * @param grafo Grafo das rotas
-     * @return Uma lista de todas as rotas geradas pelo algoritmo de visinho mais próximo com o custo total delas
+     * @return Uma lista de todas as rotas geradas pelo algoritmo de vizinho mais próximo com o custo total delas
      */
     static public List<Pair<List<Integer>, Double>> setPopulationWithClosestNeighbourAndSwap(int populationSize, Grafo grafo){
         List<Pair<List<Integer>, Double>> population = new ArrayList<>();
@@ -65,7 +65,7 @@ public class Fitness {
      *
      * @param populationSize Tamanho desejado da população
      * @param grafo Grafo das rotas
-     * @return Uma lista de todas as rotas geradas pelo algoritmo de visinho mais próximo com o custo total delas
+     * @return Uma lista de todas as rotas geradas pelo algoritmo de inserção mais próxima com o custo total delas
      */
     static public List<Pair<List<Integer>, Double>> setPopulationWithClosestInsertionAndShift(int populationSize, Grafo grafo){
         List<Pair<List<Integer>, Double>> population = new ArrayList<>();
@@ -74,9 +74,11 @@ public class Fitness {
             InsercaoMaisProxima closestInsertion = new InsercaoMaisProxima();
             BuscaLocal bl = new BuscaLocal();
 
-            // Executa o algoritmo de inserção mais próxima a partir do caminho especificado e aplica a busca local shift na rota gerada
+            // Executa o algoritmo de inserção mais próxima a partir do caminho especificado
             List<Integer> CIRoute = closestInsertion.resolver(grafo, i);
+            // Remove o último valor que forma o ciclo da inserção mais próxima para prevenir bugs durante a execução do algoritmo genético
             CIRoute.removeLast();
+            // Aplica a busca local shift na rota gerada
             List<Integer> route = bl.executarShift(grafo, CIRoute);
 
             // Cálcula o valor da rota

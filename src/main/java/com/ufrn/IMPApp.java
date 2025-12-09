@@ -10,64 +10,60 @@ import java.util.List;
 
 public class IMPApp {
     public static void main( String[] args ) {
+        System.out.println("=== Heurística da Inserção mais Barata + Busca Local ===");
+
         try {
             String planilha = "/planilha.xlsx";
             String planilhaProblema9e10 = "/planilhaProblema9e10.xlsx";
 
-            rodarProblema(planilha, 48, 0);
-            rodarProblema(planilha, 48, 1);
+            rodarProblema(1, planilha, 48, 0);
+            rodarProblema(2, planilha, 48, 1);
 
-            rodarProblema(planilha, 36, 0);
-            rodarProblema(planilha, 36, 1);
+            rodarProblema(3, planilha, 36, 0);
+            rodarProblema(4, planilha, 36, 1);
 
-            rodarProblema(planilha, 24, 0);
-            rodarProblema(planilha, 24, 1);
+            rodarProblema(5, planilha, 24, 0);
+            rodarProblema(6, planilha, 24, 1);
 
-            rodarProblema(planilha, 12, 0);
-            rodarProblema(planilha,12, 1);
+            rodarProblema(7, planilha, 12, 0);
+            rodarProblema(8, planilha,12, 1);
 
-            rodarProblema(planilhaProblema9e10, 7, 0);
-            rodarProblema(planilhaProblema9e10, 7, 1);
+            rodarProblema(9, planilhaProblema9e10, 7, 0);
+            rodarProblema(10, planilhaProblema9e10, 7, 1);
 
-            rodarProblema(planilha, 6, 0);
-            rodarProblema(planilha, 6, 1);
+            rodarProblema(11, planilha, 6, 0);
+            rodarProblema(12, planilha, 6, 1);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void rodarProblema(String planilha, int numVertice, int aba){
+    public static void rodarProblema(int id, String planilha, int numVertice, int aba) {
         try {
-            LeitorExcel leitor = new LeitorExcel();
-            Grafo grafo = leitor.popularGrafo("/planilha.xlsx", numVertice, aba);
-            System.out.println("Grafo carregado com " + grafo.getNumVertices() + " vértices.");
+            System.out.println("\n------------------------------------------------------------");
+            System.out.println("Problema " + id);
 
-            System.out.println("\n--- 1. Insercao Mais Próxima ---");
+            LeitorExcel leitor = new LeitorExcel();
+            Grafo grafo = leitor.popularGrafo(planilha, numVertice, aba);
+            String unidade = (aba == 0) ? "km" : "min";
+
+            System.out.println("\n--- Inserção Mais Próxima ---");
             InsercaoMaisProxima insercaoMaisProxima = new InsercaoMaisProxima();
             List<Integer> rotaInicial = insercaoMaisProxima.resolver(grafo, 0);
+            double custoInicial = Miscs.calcularCustoRota(grafo, rotaInicial);
 
-            double distanciaInicial = Miscs.calcularCustoRota(grafo, rotaInicial);
             System.out.println("Rota inicial: " + rotaInicial);
-            if (aba == 0)
-                System.out.printf("Distância final: %.2f km\n", distanciaInicial);
-            else{
-                System.out.printf("Tempo final: %.2f min\n", distanciaInicial);
-            }
+            System.out.printf("Custo Inicial: %.2f %s\n", custoInicial, unidade);
 
             BuscaLocal bl = new BuscaLocal();
-            System.out.println("\n--- 2. Busca Local ---");
+            System.out.println("\n--- Busca Local (Shift) ---");
             List<Integer> rotaOtimizada = bl.executarShift(grafo, rotaInicial);
-            double distanciaFinal = Miscs.calcularCustoRota(grafo, rotaOtimizada);
+            double custoOtimizado = Miscs.calcularCustoRota(grafo, rotaOtimizada);
 
             System.out.println("Rota otimizada: " + rotaOtimizada);
-            
-            if (aba == 0)
-                System.out.printf("Distância final: %.2f km\n", distanciaFinal);
-            else{
-                System.out.printf("Tempo final: %.2f min\n", distanciaFinal);
-            }
-            System.out.printf("Melhoria: %.2f%%\n", ((distanciaInicial - distanciaFinal) / distanciaInicial) * 100);
-            System.out.println("---------------------------------------");
+            System.out.printf("Custo otimizado: %.2f %s\n", custoOtimizado, unidade);
+
+            System.out.printf("Melhoria: %.2f%%\n", ((custoInicial - custoOtimizado) / custoInicial) * 100);
         } catch (Exception e) {
             e.printStackTrace();
         }

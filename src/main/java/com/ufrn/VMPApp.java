@@ -9,45 +9,61 @@ import com.ufrn.util.LeitorExcel;
 import java.util.List;
 
 public class VMPApp {
-    public static void main( String[] args ) {
-        try {
-            LeitorExcel leitor = new LeitorExcel();
-            Grafo grafo = leitor.popularGrafo("/planilha.xlsx", 48, 0);
-            System.out.println("Grafo carregado com " + grafo.getNumVertices() + " vértices.");
+    public static void main(String[] args) {
+        System.out.println("=== Heurística do Vizinho mais Próximo + Busca Local ===");
 
-            System.out.println("\n--- 1. Vizinho Mais Próximo ---");
+        try {
+            String planilha = "/planilha.xlsx";
+            String planilhaProblema9e10 = "/planilhaProblema9e10.xlsx";
+
+            rodarProblema(1, planilha, 48, 0);
+            rodarProblema(2, planilha, 48, 1);
+
+            rodarProblema(3, planilha, 36, 0);
+            rodarProblema(4, planilha, 36, 1);
+
+            rodarProblema(5, planilha, 24, 0);
+            rodarProblema(6, planilha, 24, 1);
+
+            rodarProblema(7, planilha, 12, 0);
+            rodarProblema(8, planilha,12, 1);
+
+            rodarProblema(9, planilhaProblema9e10, 7, 0);
+            rodarProblema(10, planilhaProblema9e10, 7, 1);
+
+            rodarProblema(11, planilha, 6, 0);
+            rodarProblema(12, planilha, 6, 1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void rodarProblema(int id, String planilha, int numVertice, int aba) {
+        try {
+            System.out.println("\n------------------------------------------------------------");
+            System.out.println("Problema " + id);
+
+            LeitorExcel leitor = new LeitorExcel();
+            Grafo grafo = leitor.popularGrafo(planilha, numVertice, aba);
+            String unidade = (aba == 0) ? "km" : "min";
+
+            System.out.println("\n--- Vizinho Mais Próximo ---");
             VizinhoMaisProximo vizinhoMaisProximo = new VizinhoMaisProximo();
             List<Integer> rotaInicial = vizinhoMaisProximo.resolver(grafo, 0);
-
             double custoInicial = Miscs.calcularCustoRota(grafo, rotaInicial);
+
             System.out.println("Rota inicial: " + rotaInicial);
-            System.out.printf("Distância inicial: %.2f km\n", custoInicial);
+            System.out.printf("Custo Inicial: %.2f %s\n", custoInicial, unidade);
 
             BuscaLocal bl = new BuscaLocal();
+            System.out.println("\n--- Busca Local (Swap) ---");
+            List<Integer> rotaOtimizada = bl.executarSwap(grafo, rotaInicial);
+            double custoOtimizado = Miscs.calcularCustoRota(grafo, rotaOtimizada);
 
-            System.out.println("\n--- 2. Busca Local - Shift ---");
-            List<Integer> rotaShift = bl.executarShift(grafo, rotaInicial);
-            double custoShift = Miscs.calcularCustoRota(grafo, rotaShift);
+            System.out.println("Rota otimizada: " + rotaOtimizada);
+            System.out.printf("Custo otimizado: %.2f %s\n", custoOtimizado, unidade);
 
-            System.out.println("Rota otimizada: " + rotaShift);
-            System.out.printf("Distância final: %.2f km\n", custoShift);
-            System.out.printf("Melhoria: %.2f%%\n", ((custoInicial - custoShift) / custoInicial) * 100);
-
-            System.out.println("\n--- 3. Busca Local - Swap ---");
-            List<Integer> rotaSwap = bl.executarSwap(grafo, rotaInicial);
-            double custoSwap = Miscs.calcularCustoRota(grafo, rotaSwap);
-
-            System.out.println("Rota otimizada: " + rotaSwap);
-            System.out.printf("Distância final: %.2f km\n", custoSwap);
-            System.out.printf("Melhoria: %.2f%%\n", ((custoInicial - custoSwap) / custoInicial) * 100);
-
-            System.out.println("\n--- 4. Busca Local - Inversão ---");
-            List<Integer> rotaInversao = bl.executarInversao(grafo, rotaInicial);
-            double custoInversao = Miscs.calcularCustoRota(grafo, rotaInversao);
-
-            System.out.println("Rota otimizada: " + rotaInversao);
-            System.out.printf("Distância final: %.2f km\n", custoInversao);
-            System.out.printf("Melhoria: %.2f%%\n", ((custoInicial - custoInversao) / custoInicial) * 100);
+            System.out.printf("Melhoria: %.2f%%\n", ((custoInicial - custoOtimizado) / custoInicial) * 100);
         } catch (Exception e) {
             e.printStackTrace();
         }

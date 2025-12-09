@@ -8,9 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Renovacao {
-    private Random random = new Random();
-
-    public List<Pair<List<Integer>, Double>> renovarPorTorneio(List<Pair<List<Integer>, Double>> populacaoAntiga, List<Pair<List<Integer>, Double>> novosFilhos, int tamanhoTorneio) {
+    static public List<Pair<List<Integer>, Double>> renovarPorTorneio(List<Pair<List<Integer>, Double>> populacaoAntiga, List<Pair<List<Integer>, Double>> novosFilhos, int tamanhoTorneio) {
         List<Pair<List<Integer>, Double>> novaPopulacao = new ArrayList<>();
 
         // Cria a pool com todos os candidatos
@@ -20,6 +18,7 @@ public class Renovacao {
 
         int tamanhoDesejado = populacaoAntiga.size();
 
+        Random random = new Random();
         // Preenche as vagas da nova geração
         while (novaPopulacao.size() < tamanhoDesejado) {
             Pair<List<Integer>, Double> vencedorRodada = null;

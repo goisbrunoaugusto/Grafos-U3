@@ -3,7 +3,6 @@ package com.ufrn.algorithm;
 import com.ufrn.miscs.Pair;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -61,28 +60,5 @@ public class Renovacao {
         }
 
         return novaPopulacao;
-    }
-
-    /**
-     * @param populacaoAntiga: A lista de pares representando a população da geração atual (pais) e seus custos
-     * @param novosFilhos: A lista de pares representando os novos indivíduos gerados (filhos) e seus custos
-     * @return Retorna a nova população composta pelos melhores indivíduos (menor custo) selecionados do conjunto total (pais + filhos)
-     */
-    public List<Pair<List<Integer>, Double>> renovarPorElitismo(List<Pair<List<Integer>, Double>> populacaoAntiga, List<Pair<List<Integer>, Double>> novosFilhos) {
-        int tamanhoDesejado = populacaoAntiga.size();
-
-        // Cria uma lista com todos os indivíduos
-        List<Pair<List<Integer>, Double>> poolGeral = new ArrayList<>();
-        poolGeral.addAll(populacaoAntiga);
-        poolGeral.addAll(novosFilhos);
-
-        // Ordena a pool pelo custo
-        poolGeral.sort(Comparator.comparingDouble(Pair::value));
-
-        // Seleciona os melhores para manter o tamanho da população
-        int limite = Math.min(tamanhoDesejado, poolGeral.size());
-
-        // Retorna a sublista com os melhores
-        return new ArrayList<>(poolGeral.subList(0, limite));
     }
 }

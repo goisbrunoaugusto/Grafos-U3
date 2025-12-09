@@ -7,17 +7,17 @@ import com.ufrn.model.Grafo;
 import com.ufrn.util.LeitorExcel;
 import org.apache.commons.math3.exception.NullArgumentException;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class GeneticApp {
+public class MemeticoApp {
     static Pair<List<Integer>,Double> menorValor = null;
     static double mediaValores = 0;
     static long tempoExecucao = 0;
 
     public static void main( String[] args ) {
-        System.out.println("=== Algoritmo Genético ===");
-
+        System.out.println("=== Algoritmo Memético ===");
         try {
             String planilha = "/planilha.xlsx";
             String planilhaProblema9e10 = "/planilhaProblema9e10.xlsx";
@@ -81,7 +81,6 @@ public class GeneticApp {
                 rodarProblema(12, planilha, 6, 1);
             }
             printResultados("Problema 12", "min");
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,71 +100,50 @@ public class GeneticApp {
             mediaValores = 0;
             tempoExecucao = 0;
 
-//            System.out.println("\n------------------------------------------------------------");
-//            System.out.println("Problema " + id);
             long start = System.currentTimeMillis();
-
             LeitorExcel leitor = new LeitorExcel();
             Grafo grafo = leitor.popularGrafo(planilha, numVertice, aba);
 
             List<Pair<List<Integer>, Double>> populationList = Fitness.setPopulationWithClosestNeighbourAndSwap(grafo.getNumVertices(), grafo);
             populationList.sort(Comparator.comparingDouble(Pair<List<Integer>, Double>::value).reversed());
 
-//            for(Pair<List<Integer>, Double> route : populationList){
-//                System.out.print("Rota: " + route.key());
-//                System.out.printf(" | Custo: %.2f km\n", route.value());
-//            }
-
-//            System.out.println();
-//            System.out.println("------------------ Pais selecionados ------------------ ");
-            List<Pair<List<Integer>, Double>> parentList = Selection.elitismSelection(populationList,.8);
+            List<Pair<List<Integer>, Double>> parentList = Selection.elitismSelection(populationList, .8);
             if(parentList == null){
                 throw new NullArgumentException();
             }
 
-//            for(Pair<List<Integer>, Double> parent : parentList){
-//                System.out.print("Rota: " + parent.key());
-//                System.out.printf(" | Custo: %.2f %s\n", parent.value(), unidade);
-//            }
-
-//            System.out.println();
-//            System.out.println("------------------ Filhos gerados ------------------ ");
             List<Pair<List<Integer>, Double>> offspringList = Crossover.onePoint(grafo, parentList);
 
-//            for(Pair<List<Integer>, Double> offspring : offspringList){
-//                System.out.print("Rota: " + offspring.key());
-//                System.out.printf(" | Custo: %.2f %s\n", offspring.value(), unidade);
-//            }
-
-//            System.out.println();
-//            System.out.println("------------------ Filhos gerados normais e mutantes ------------------ ");
             List<Pair<List<Integer>, Double>> mutatedOffspringList = Mutation.mutate(grafo, offspringList, .5);
 
-//            for(Pair<List<Integer>, Double> offspring : mutatedOffspringList){
-//                System.out.print("Rota: " + offspring.key());
-//                System.out.printf(" | Custo: %.2f %s\n", offspring.value(), unidade);
-//            }
+            BuscaLocal bl = new BuscaLocal();
+            List<Pair<List<Integer>, Double>> memeticOffspringList = new ArrayList<>();
 
-//            System.out.println();
-//            System.out.println("------------------ Filhos que sobraram da renovação ------------------ ");
-            List<Pair<List<Integer>, Double>> vencedoresTorneio = Renovacao.renovarPorTorneio(populationList, offspringList, 3);
+            for (Pair<List<Integer>, Double> individuo : mutatedOffspringList) {
+                List<Integer> rotaAtual = individuo.key();
+
+                rotaAtual = bl.executarSwap(grafo, rotaAtual);
+
+                rotaAtual = bl.executarShift(grafo, rotaAtual);
+
+                rotaAtual = bl.executarInversao(grafo, rotaAtual);
+
+                double custoOtimizado = Miscs.calcularCustoRota(grafo, rotaAtual);
+                memeticOffspringList.add(new Pair<>(rotaAtual, custoOtimizado));
+            }
+
+            List<Pair<List<Integer>, Double>> vencedoresTorneio = Renovacao.renovarPorTorneio(populationList, memeticOffspringList, 3);
 
             double somaValores = 0;
             for(Pair<List<Integer>, Double> vencedor: vencedoresTorneio){
                 somaValores += vencedor.value();
                 if(menorValor == null) {
                     menorValor = vencedor;
-                    continue;
                 } else if (menorValor.value() > vencedor.value()) {
                     menorValor = vencedor;
                 }
             }
             mediaValores = somaValores/vencedoresTorneio.size();
-
-//            for(Pair<List<Integer>, Double> vencedores : vencedoresTorneio){
-//                System.out.print("Rota: " + vencedores.key());
-//                System.out.printf(" | Custo: %.2f %s\n", vencedores.value(), unidade);
-//            }
 
             long finish = System.currentTimeMillis();
             tempoExecucao = finish - start;

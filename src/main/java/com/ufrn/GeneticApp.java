@@ -18,8 +18,10 @@ import java.util.List;
 
 public class GeneticApp {
     static Pair<List<Integer>,Double> menorValor = null;
+    static double somaMediaValores = 0;
     static double mediaValores = 0;
-    static long tempoExecucao = 0;
+    static double somaTempoExecucao = 0;
+    static double mediaTempoExecucao = 0;
 
     public static void main( String[] args ) {
         System.out.println("=== Algoritmo Genético ===");
@@ -97,11 +99,16 @@ public class GeneticApp {
 
     private static void printResultados(String problema, String unidade) {
         try{
+            mediaTempoExecucao = somaTempoExecucao/20;
+            somaTempoExecucao = 0;
+            mediaValores = somaMediaValores/20;
+            somaMediaValores = 0;
+
             String text = "------------------------------------------------------------\n" +
                     problema + "\n" +
                     "Menor valor: " + String.format("%.2f", menorValor.value()) + unidade + "\n" +
                     "Média: " + String.format("%.2f", mediaValores) + unidade + "\n" +
-                    "Tempo de execução: " + tempoExecucao + "ms\n";
+                    "Média do tempo de execução: " + String.format("%.2f", mediaTempoExecucao) + "ms\n";
             System.out.println(text);
 
             Files.write(Paths.get("src/main/java/com/ufrn/results/GeneticResults.txt"), text.getBytes(), StandardOpenOption.APPEND);
@@ -113,20 +120,22 @@ public class GeneticApp {
 
     public static void rodarProblema(int id, String planilha, int numVertice, int aba) {
         try {
-            menorValor = null;
-            mediaValores = 0;
-            tempoExecucao = 0;
+            Pair<List<Integer>, Double> _menorValor = null;
+            double _mediaValores = 0;
+            double _tempoExecucao = 0;
             String unidade = (aba == 0) ? "km" : "min";
 
 //            System.out.println("\n------------------------------------------------------------");
 //            System.out.println("Problema " + id);
-            long start = System.currentTimeMillis();
+//            long start = System.currentTimeMillis();
 
             LeitorExcel leitor = new LeitorExcel();
             Grafo grafo = leitor.popularGrafo(planilha, numVertice, aba);
 
-            List<Pair<List<Integer>, Double>> populationList = Fitness.setPopulationWithClosestNeighbourAndSwap(grafo.getNumVertices(), grafo);
+//            System.out.println("Começou");
+            long startTime = System.nanoTime();
 
+            List<Pair<List<Integer>, Double>> populationList = Fitness.setPopulationWithClosestNeighbourAndSwap(grafo.getNumVertices(), grafo);
             populationList.addAll(Fitness.setPopulationWithClosestInsertionAndShift(grafo.getNumVertices(), grafo));
             populationList.sort(Comparator.comparingDouble(Pair<List<Integer>, Double>::value).reversed());
 
@@ -167,27 +176,36 @@ public class GeneticApp {
 
 //            System.out.println();
 //            System.out.println("------------------ Filhos que sobraram da renovação ------------------ ");
-            List<Pair<List<Integer>, Double>> vencedoresTorneio = Renovacao.renovarPorTorneio(populationList, offspringList, 3);
+            List<Pair<List<Integer>, Double>> vencedoresTorneio = Renovacao.renovarPorTorneio(populationList, mutatedOffspringList, 3);
 
-            double somaValores = 0;
+            double _somaValores = 0;
             for(Pair<List<Integer>, Double> vencedor: vencedoresTorneio){
-                somaValores += vencedor.value();
-                if(menorValor == null) {
-                    menorValor = vencedor;
-                    continue;
-                } else if (menorValor.value() > vencedor.value()) {
-                    menorValor = vencedor;
+                _somaValores += vencedor.value();
+                if(_menorValor == null) {
+                    _menorValor = vencedor;
+                } else if (_menorValor.value() > vencedor.value()) {
+                    _menorValor = vencedor;
                 }
             }
-            mediaValores = somaValores/vencedoresTorneio.size();
+            _mediaValores = _somaValores/vencedoresTorneio.size();
 
 //            for(Pair<List<Integer>, Double> vencedores : vencedoresTorneio){
 //                System.out.print("Rota: " + vencedores.key());
 //                System.out.printf(" | Custo: %.2f %s\n", vencedores.value(), unidade);
 //            }
 
-            long finish = System.currentTimeMillis();
-            tempoExecucao = finish - start;
+            long stopTime = System.nanoTime();
+//            System.out.println("Terminou");
+            _tempoExecucao = (double) (stopTime - startTime) / 1_000_000;
+
+            somaMediaValores += _mediaValores;
+            somaTempoExecucao += _tempoExecucao;
+//            menorValor = _menorValor;
+            if(menorValor == null) {
+                menorValor = _menorValor;
+            } else if (menorValor.value() > _menorValor.value()) {
+                menorValor = _menorValor;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

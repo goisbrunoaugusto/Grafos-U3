@@ -17,12 +17,16 @@ import java.util.List;
 
 public class MemeticoApp {
     static Pair<List<Integer>,Double> menorValor = null;
+    static double somaMediaValores = 0;
     static double mediaValores = 0;
-    static long tempoExecucao = 0;
+    static double somaTempoExecucao = 0;
+    static double mediaTempoExecucao = 0;
 
     public static void main( String[] args ) {
         System.out.println("=== Algoritmo Memético ===");
         try {
+            Files.write(Paths.get("src/main/java/com/ufrn/results/MemeticoResults.txt"), "".getBytes());
+
             String planilha = "/planilha.xlsx";
             String planilhaProblema9e10 = "/planilhaProblema9e10.xlsx";
 
@@ -92,11 +96,16 @@ public class MemeticoApp {
 
     private static void printResultados(String problema, String unidade) {
         try{
+            mediaTempoExecucao = somaTempoExecucao/20;
+            somaTempoExecucao = 0;
+            mediaValores = somaMediaValores/20;
+            somaMediaValores = 0;
+
             String text = "------------------------------------------------------------\n" +
                     problema + "\n" +
                     "Menor valor: " + String.format("%.2f", menorValor.value()) + unidade + "\n" +
                     "Média: " + String.format("%.2f", mediaValores) + unidade + "\n" +
-                    "Tempo de execução: " + tempoExecucao + "ms\n";
+                    "Média do tempo de execução: " + String.format("%.2f", mediaTempoExecucao) + "ms\n";
             System.out.println(text);
 
             Files.write(Paths.get("src/main/java/com/ufrn/results/MemeticoResults.txt"), text.getBytes(), StandardOpenOption.APPEND);
@@ -107,15 +116,19 @@ public class MemeticoApp {
 
     public static void rodarProblema(int id, String planilha, int numVertice, int aba) {
         try {
-            menorValor = null;
-            mediaValores = 0;
-            tempoExecucao = 0;
+            Pair<List<Integer>, Double> _menorValor = null;
+            double _mediaValores = 0;
+            double _tempoExecucao = 0;
+            String unidade = (aba == 0) ? "km" : "min";
 
-            long start = System.currentTimeMillis();
+//            long start = System.currentTimeMillis();
+            long startTime = System.nanoTime();
+
             LeitorExcel leitor = new LeitorExcel();
             Grafo grafo = leitor.popularGrafo(planilha, numVertice, aba);
 
             List<Pair<List<Integer>, Double>> populationList = Fitness.setPopulationWithClosestNeighbourAndSwap(grafo.getNumVertices(), grafo);
+            populationList.addAll(Fitness.setPopulationWithClosestInsertionAndShift(grafo.getNumVertices(), grafo));
             populationList.sort(Comparator.comparingDouble(Pair<List<Integer>, Double>::value).reversed());
 
             List<Pair<List<Integer>, Double>> parentList = Selection.elitismSelection(populationList, .8);
@@ -145,19 +158,28 @@ public class MemeticoApp {
 
             List<Pair<List<Integer>, Double>> vencedoresTorneio = Renovacao.renovarPorTorneio(populationList, memeticOffspringList, 3);
 
-            double somaValores = 0;
+            double _somaValores = 0;
             for(Pair<List<Integer>, Double> vencedor: vencedoresTorneio){
-                somaValores += vencedor.value();
-                if(menorValor == null) {
-                    menorValor = vencedor;
-                } else if (menorValor.value() > vencedor.value()) {
-                    menorValor = vencedor;
+                _somaValores += vencedor.value();
+                if(_menorValor == null) {
+                    _menorValor = vencedor;
+                } else if (_menorValor.value() > vencedor.value()) {
+                    _menorValor = vencedor;
                 }
             }
-            mediaValores = somaValores/vencedoresTorneio.size();
+            _mediaValores = _somaValores/vencedoresTorneio.size();
 
-            long finish = System.currentTimeMillis();
-            tempoExecucao = finish - start;
+            long stopTime = System.nanoTime();
+//            System.out.println("Terminou");
+            _tempoExecucao = (double) (stopTime - startTime) / 1_000_000;
+
+            somaMediaValores += _mediaValores;
+            somaTempoExecucao += _tempoExecucao;
+            if(menorValor == null) {
+                menorValor = _menorValor;
+            } else if (menorValor.value() > _menorValor.value()) {
+                menorValor = _menorValor;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

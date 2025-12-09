@@ -7,6 +7,11 @@ import com.ufrn.model.Grafo;
 
 public class InsercaoMaisProxima implements AlgoritmoPCV {
 
+    /**
+     * @param grafo O objeto Grafo contendo a matriz de adjacência com os custos/distâncias entre as cidades.
+     * @param verticeInicial O índice do vértice de partida para o caixeiro viajante.
+     * @return Uma lista de inteiros representando a sequência de cidades visitadas, formando um ciclo.
+     */
     @Override
     public List<Integer> resolver(Grafo grafo, int verticeInicial) {
         int numVertices = grafo.getNumVertices();

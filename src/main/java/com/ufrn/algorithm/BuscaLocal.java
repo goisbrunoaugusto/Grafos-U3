@@ -8,6 +8,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class BuscaLocal {
+    /**
+     * @param grafo O objeto Grafo contendo a matriz de custos/distâncias.
+     * @param rotaInicial A lista de inteiros representando a rota inicial.
+     * @return Uma nova lista de inteiros contendo a rota otimizada após a aplicação da busca local.
+     */
     public List<Integer> executarShift(Grafo grafo, List<Integer> rotaInicial) {
         List<Integer> rota = new ArrayList<>(rotaInicial);
         boolean houveMelhoria = true;

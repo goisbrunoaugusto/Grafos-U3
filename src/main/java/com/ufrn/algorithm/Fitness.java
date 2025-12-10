@@ -28,6 +28,11 @@ public class Fitness {
         for (int i = 0; i < populationSize; i++) {
             VizinhoMaisProximo closestNeighbour = new VizinhoMaisProximo();
             List<Integer> route = closestNeighbour.resolver(grafo, i);
+            // Adiciona 0 no início da rota
+            Integer angicos = 0;
+            if (route.remove(angicos)) {
+                route.add(0, angicos);
+            }
             double cost = Miscs.calcularCustoRota(grafo, route);
             population.add(new Pair<>(route, cost));
         }
@@ -54,6 +59,12 @@ public class Fitness {
             // Cálcula o valor da rota
             double cost = Miscs.calcularCustoRota(grafo, route);
 
+            // Adiciona 0 no início da rota
+            Integer angicos = 0;
+            if (route.remove(angicos)) {
+                route.add(0, angicos);
+            }
+
             // Adiciona a rota à população
             population.add(new Pair<>(route, cost));
         }
@@ -76,14 +87,19 @@ public class Fitness {
 
             // Executa o algoritmo de inserção mais próxima a partir do caminho especificado
             List<Integer> CIRoute = closestInsertion.resolver(grafo, i);
+            // Adiciona 0 no início da rota
+            Integer angicos = 0;
+            if (CIRoute.remove(angicos)) {
+                CIRoute.add(0, angicos);
+            }
             // Remove o último valor que forma o ciclo da inserção mais próxima para prevenir bugs durante a execução do algoritmo genético
             CIRoute.removeLast();
             // Aplica a busca local shift na rota gerada
             List<Integer> route = bl.executarShift(grafo, CIRoute);
-
+            
             // Cálcula o valor da rota
             double cost = Miscs.calcularCustoRota(grafo, route);
-
+            
             // Adiciona a rota à população
             population.add(new Pair<>(route, cost));
         }

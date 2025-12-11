@@ -103,9 +103,7 @@ public class GeneticApp {
     private static void printResultados(String problema, String unidade) {
         try{
             mediaTempoExecucao = somaTempoExecucao/20;
-            somaTempoExecucao = 0;
             mediaValores = somaMediaValores/20;
-            somaMediaValores = 0;
 
             String text = "------------------------------------------------------------\n" +
                     problema + "\n" +
@@ -115,6 +113,12 @@ public class GeneticApp {
             System.out.println(text);
 
             Files.write(Paths.get("src/main/java/com/ufrn/results/GeneticResults.txt"), text.getBytes(), StandardOpenOption.APPEND);
+
+            menorValor = null;
+            somaMediaValores = 0;
+            mediaValores = 0;
+            somaTempoExecucao = 0;
+            mediaTempoExecucao = 0;
         }catch (IOException e){
             e.printStackTrace();
         }

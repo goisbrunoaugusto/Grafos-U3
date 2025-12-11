@@ -165,7 +165,7 @@ public class GeneticApp {
 //                System.out.println();
 //                System.out.println("------------------ Pais selecionados ------------------ ");
 
-                // Seleção da população por elitismo (os 80% com menor custo total de rota)
+                // Seleção da população por elitismo
                 List<Pair<List<Integer>, Double>> parentList = Selection.elitismSelection(populacaoFinal,.3);
                 if(parentList == null){
                     throw new NullArgumentException();
@@ -225,6 +225,9 @@ public class GeneticApp {
                     _menorValor = individuo;
                 }
             }
+
+            // Definição dos valores que serão usados para comparação
+
             _tempoExecucao = (double) (stopTime - startTime) / 1_000_000;
 
             _mediaValores = _somaValores/populacaoFinal.size();

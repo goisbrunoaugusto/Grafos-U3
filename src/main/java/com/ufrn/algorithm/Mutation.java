@@ -18,20 +18,25 @@ public class Mutation {
      */
     static public List<Pair<List<Integer>, Double>> mutate(Grafo grafo, List<Pair<List<Integer>, Double>> originalOffspringList, double percent){
         Random random = new Random();
+        //Gera uma ordem aleatória de posições que serão mutacionadas caso sejam escolhidas
         List<Integer> randomRouteIndexes = IntStream.range(0, originalOffspringList.size()).boxed().collect(Collectors.toList());
         Collections.shuffle(randomRouteIndexes);
 
         List<Pair<List<Integer>, Double>> mutatedOffspringList = new ArrayList<>(originalOffspringList);
         for(int i = 0; i < mutatedOffspringList.size(); i++){
+            // Verifica se vai ser mutacionado baseado na porcentagem definida antes
             if(random.nextInt(100) < percent*100){
                 int randomIndex = randomRouteIndexes.removeFirst();
+                //Realiza a mutação
                 Collections.swap(mutatedOffspringList.get(randomIndex).key(), random.nextInt(0, originalOffspringList.getFirst().key().size()), random.nextInt(0, originalOffspringList.getFirst().key().size()));
 
+                //Salva a mutação na lista
                 Pair<List<Integer>, Double> mutatedOffspring = new Pair<>(mutatedOffspringList.get(randomIndex).key(), Miscs.calcularCustoRota(grafo, mutatedOffspringList.get(randomIndex).key()));
                 mutatedOffspringList.set(randomIndex, mutatedOffspring);
             }
         }
 
+        //Retorna a lista
         return mutatedOffspringList;
     }
 }

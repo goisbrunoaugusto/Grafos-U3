@@ -192,6 +192,9 @@ public class MemeticoApp {
                     _menorValor = individuo;
                 }
             }
+
+            // Definição dos valores que serão usados para comparação
+
             _tempoExecucao = (double) (stopTime - startTime) / 1_000_000;
 
             _mediaValores = _somaValores/populacaoFinal.size();

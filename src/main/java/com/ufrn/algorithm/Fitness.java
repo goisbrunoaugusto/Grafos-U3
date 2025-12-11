@@ -4,10 +4,9 @@ import com.ufrn.miscs.Miscs;
 import com.ufrn.miscs.Pair;
 import com.ufrn.model.Grafo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Fitness {
 
@@ -37,6 +36,30 @@ public class Fitness {
             population.add(new Pair<>(route, cost));
         }
 
+        return population;
+    }
+
+    /***
+     *
+     * @param populationSize Tamanho desejado da população
+     * @param grafo Grafo das rotas
+     * @return Uma lista de rotas aleatórias onde elas sempre parte do ponto de partida inicial (Angicos)
+     */
+    static public List<Pair<List<Integer>, Double>> setPopulationFullRandom(int populationSize, Grafo grafo){
+        List<Pair<List<Integer>, Double>> population = new ArrayList<>();
+        for(int i = 0; i < populationSize; i++){
+            List<Integer> route = new ArrayList<>();
+            route.add(0);
+            List<Integer> randomOrder = IntStream.range(1, populationSize).boxed().collect(Collectors.toList());
+            Collections.shuffle(randomOrder);
+            for (int j = 1; j < grafo.getNumVertices(); j++){
+                int randomIndex = randomOrder.removeFirst();
+                route.add(randomIndex);
+            }
+
+            Pair<List<Integer>, Double> routeWithCost = new Pair<>(route, Miscs.calcularCustoRota(grafo, route));
+            population.add(routeWithCost);
+        }
         return population;
     }
 

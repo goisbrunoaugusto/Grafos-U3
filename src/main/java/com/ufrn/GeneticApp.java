@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -32,63 +33,65 @@ public class GeneticApp {
             String planilha = "/planilha.xlsx";
             String planilhaProblema9e10 = "/planilhaProblema9e10.xlsx";
 
+            int qtdGen = 1000;
+
             for (int i = 0; i < 20; i++) {
-                rodarProblema(1, planilha, 48, 0);
+                rodarProblema(planilha, 48, 0, qtdGen);
             }
             printResultados("Problema 1", "km");
 
             for (int i = 0; i < 20; i++) {
-                rodarProblema(2, planilha, 48, 1);
+                rodarProblema(planilha, 48, 1, qtdGen);
             }
             printResultados("Problema 2", "min");
 
             for (int i = 0; i < 20; i++) {
-                rodarProblema(3, planilha, 36, 0);
+                rodarProblema(planilha, 36, 0, qtdGen);
             }
             printResultados("Problema 3", "km");
 
             for (int i = 0; i < 20; i++) {
-                rodarProblema(4, planilha, 36, 1);
+                rodarProblema(planilha, 36, 1, qtdGen);
             }
             printResultados("Problema 4", "min");
 
             for (int i = 0; i < 20; i++) {
-                rodarProblema(5, planilha, 24, 0);
+                rodarProblema(planilha, 24, 0, qtdGen);
             }
             printResultados("Problema 5", "km");
 
             for (int i = 0; i < 20; i++) {
-                rodarProblema(6, planilha, 24, 1);
+                rodarProblema(planilha, 24, 1, qtdGen);
             }
             printResultados("Problema 6", "min");
 
             for (int i = 0; i < 20; i++) {
-                rodarProblema(7, planilha, 12, 0);
+                rodarProblema(planilha, 12, 0, qtdGen);
             }
             printResultados("Problema 7", "km");
 
             for (int i = 0; i < 20; i++) {
-                rodarProblema(8, planilha, 12, 1);
+                rodarProblema(planilha, 12, 1, qtdGen);
             }
             printResultados("Problema 8", "min");
 
             for (int i = 0; i < 20; i++) {
-                rodarProblema(9, planilhaProblema9e10, 7, 0);
+                rodarProblema(planilhaProblema9e10, 7, 0, qtdGen);
             }
             printResultados("Problema 9", "km");
 
             for (int i = 0; i < 20; i++) {
-                rodarProblema(10, planilhaProblema9e10, 7, 1);
+                rodarProblema(planilhaProblema9e10, 7, 1, qtdGen);
             }
             printResultados("Problema 10", "min");
 
             for (int i = 0; i < 20; i++) {
-                rodarProblema(11, planilha, 6, 0);
+                rodarProblema(planilha, 6, 0, qtdGen);
             }
             printResultados("Problema 11", "km");
 
             for (int i = 0; i < 20; i++) {
-                rodarProblema(12, planilha, 6, 1);
+                rodarProblema(planilha, 6, 1, qtdGen);
             }
             printResultados("Problema 12", "min");
 
@@ -118,12 +121,13 @@ public class GeneticApp {
 
     }
 
-    public static void rodarProblema(int id, String planilha, int numVertice, int aba) {
+    public static void rodarProblema(String planilha, int numVertice, int aba, int qtdGen) {
         try {
             Pair<List<Integer>, Double> _menorValor = null;
             double _mediaValores = 0;
             double _tempoExecucao = 0;
             String unidade = (aba == 0) ? "km" : "min";
+
 
 //            System.out.println("\n------------------------------------------------------------");
 //            System.out.println("Problema " + id);
@@ -134,84 +138,94 @@ public class GeneticApp {
 
             long startTime = System.nanoTime();
 
-            // Geração da população utilizando vizinho mais próximo com swap e inserção mais próxima com shift
+            // Geração da população utilizando vizinho mais próximo com swap e inserção mais próxima com shift e totalmente aleatório
             List<Pair<List<Integer>, Double>> populationList = Fitness.setPopulationWithClosestNeighbourAndSwap(grafo.getNumVertices(), grafo);
             populationList.addAll(Fitness.setPopulationWithClosestInsertionAndShift(grafo.getNumVertices(), grafo));
+            populationList.addAll(Fitness.setPopulationFullRandom(grafo.getNumVertices(), grafo));
+//            System.out.println();
+//            for(Pair<List<Integer>, Double> pair : randomPop){
+//                System.out.println(pair);
+//            }
 
             // Ordenação da população em ordem crescente de custo total da rota
             populationList.sort(Comparator.comparingDouble(Pair<List<Integer>, Double>::value).reversed());
+            List<Pair<List<Integer>, Double>> populacaoFinal = new ArrayList<>(populationList);
+            int count = 1;
+            do{
 
-//            for(Pair<List<Integer>, Double> route : populationList){
-//                System.out.print("Rota: " + route.key());
-//                System.out.printf(" | Custo: %.2f km\n", route.value());
-//            }
+//                for(Pair<List<Integer>, Double> route : populacaoFinal){
+//                    System.out.print("Rota: " + route.key());
+//                    System.out.printf(" | Custo: %.2f km\n", route.value());
+//                }
+//
+//                System.out.println();
+//                System.out.println("------------------ Pais selecionados ------------------ ");
 
-//            System.out.println();
-//            System.out.println("------------------ Pais selecionados ------------------ ");
-
-            // Seleção da população por elitismo (os 80% com menor custo total de rota)
-            List<Pair<List<Integer>, Double>> parentList = Selection.elitismSelection(populationList,.8);
-            if(parentList == null){
-                throw new NullArgumentException();
-            }
-
-//            for(Pair<List<Integer>, Double> parent : parentList){
-//                System.out.print("Rota: " + parent.key());
-//                System.out.printf(" | Custo: %.2f %s\n", parent.value(), unidade);
-//            }
-
-//            System.out.println();
-//            System.out.println("------------------ Filhos gerados ------------------ ");
-
-            // Cruzamento da população selecionada por algoritmo de um ponto
-            List<Pair<List<Integer>, Double>> offspringList = Crossover.onePoint(grafo, parentList);
-
-//            for(Pair<List<Integer>, Double> offspring : offspringList){
-//                System.out.print("Rota: " + offspring.key());
-//                System.out.printf(" | Custo: %.2f %s\n", offspring.value(), unidade);
-//            }
-
-//            System.out.println();
-//            System.out.println("------------------ Filhos gerados normais e mutantes ------------------ ");
-
-            // Mutação dos filhos gerados em cinquenta por cento
-            List<Pair<List<Integer>, Double>> mutatedOffspringList = Mutation.mutate(grafo, offspringList, .5);
-
-//            for(Pair<List<Integer>, Double> offspring : mutatedOffspringList){
-//                System.out.print("Rota: " + offspring.key());
-//                System.out.printf(" | Custo: %.2f %s\n", offspring.value(), unidade);
-//            }
-
-//            System.out.println();
-//            System.out.println("------------------ Filhos que sobraram da renovação ------------------ ");
-
-            // Renovação da população por torneio
-            List<Pair<List<Integer>, Double>> vencedoresTorneio = Renovacao.renovarPorTorneio(populationList, mutatedOffspringList, 3);
-
-            // Definição do menor valor dentre os vencedores do torneio
-            double _somaValores = 0;
-            for(Pair<List<Integer>, Double> vencedor: vencedoresTorneio){
-                _somaValores += vencedor.value();
-                if(_menorValor == null) {
-                    _menorValor = vencedor;
-                } else if (_menorValor.value() > vencedor.value()) {
-                    _menorValor = vencedor;
+                // Seleção da população por elitismo (os 80% com menor custo total de rota)
+                List<Pair<List<Integer>, Double>> parentList = Selection.elitismSelection(populacaoFinal,.3);
+                if(parentList == null){
+                    throw new NullArgumentException();
                 }
-            }
 
-//            for(Pair<List<Integer>, Double> vencedores : vencedoresTorneio){
-//                System.out.print("Rota: " + vencedores.key());
-//                System.out.printf(" | Custo: %.2f %s\n", vencedores.value(), unidade);
-//            }
+//                for(Pair<List<Integer>, Double> parent : listaPais){
+//                    System.out.print("Rota: " + parent.key());
+//                    System.out.printf(" | Custo: %.2f %s\n", parent.value(), unidade);
+//                }
+//
+//                System.out.println();
+//                System.out.println("------------------ Filhos gerados ------------------ ");
+
+                // Cruzamento da população selecionada por algoritmo de um ponto
+                List<Pair<List<Integer>, Double>> offspringList = Crossover.onePoint(grafo, parentList);
+
+//                for(Pair<List<Integer>, Double> offspring : offspringList){
+//                    System.out.print("Rota: " + offspring.key());
+//                    System.out.printf(" | Custo: %.2f %s\n", offspring.value(), unidade);
+//                }
+//
+//                System.out.println();
+//                System.out.println("------------------ Filhos gerados normais e mutantes ------------------ ");
+
+                // Mutação dos filhos gerados em cinquenta por cento
+                List<Pair<List<Integer>, Double>> mutatedOffspringList = Mutation.mutate(grafo, offspringList, .03);
+
+//                for(Pair<List<Integer>, Double> offspring : mutatedOffspringList){
+//                    System.out.print("Rota: " + offspring.key());
+//                    System.out.printf(" | Custo: %.2f %s\n", offspring.value(), unidade);
+//                }
+//
+//                System.out.println();
+//                System.out.println("------------------ Filhos que sobraram da renovação ------------------ ");
+
+                // Renovação da população por torneio
+                populacaoFinal  = Renovacao.renovarPorTorneio(populacaoFinal, mutatedOffspringList, 3);
+//                for(Pair<List<Integer>, Double> vencedores : populacaoFinal){
+//                    System.out.print("Rota: " + vencedores.key());
+//                    System.out.printf(" | Custo: %.2f %s\n", vencedores.value(), unidade);
+//                }
+//                System.out.println(populacaoFinal.size());
+//
+//                System.out.println();
+            }while(count++<=qtdGen);
 
             long stopTime = System.nanoTime();
-//            System.out.println("Terminou");
+
+            double _somaValores = 0;
+
+            // Definição do menor valor da população final
+            for(Pair<List<Integer>, Double> individuo : populacaoFinal){
+                _somaValores += individuo.value();
+                if(_menorValor == null) {
+                    _menorValor = individuo;
+                } else if (_menorValor.value() > individuo.value()) {
+                    _menorValor = individuo;
+                }
+            }
             _tempoExecucao = (double) (stopTime - startTime) / 1_000_000;
 
-            _mediaValores = _somaValores/vencedoresTorneio.size();
+            _mediaValores = _somaValores/populacaoFinal.size();
             somaMediaValores += _mediaValores;
             somaTempoExecucao += _tempoExecucao;
-//            menorValor = _menorValor;
             if(menorValor == null) {
                 menorValor = _menorValor;
             } else if (menorValor.value() > _menorValor.value()) {
